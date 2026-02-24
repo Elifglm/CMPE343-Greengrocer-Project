@@ -108,7 +108,7 @@ The project uses a MySQL database. The schema is available in `db.sql`.
 | Name | Role | Responsibilities |
 |------|------|-----------------|
 | **Elif Gülüm** | Backend | DAO layer, database connection (`DBUtil`), `OrderDAO`, `UserDAO`, `ProductDAO`, business logic services, `CarrierController` |
-| **Yağmur Güzeler** | Full Stack | FXML UI files (`owner.fxml`, `customer.fxml`, `cart.fxml`, etc.), `styles.css`, UI design and layout; `CouponDAO` (user assignment, activation, deletion), `CustomerLoyaltyDAO` (point redemption, leaderboard) |
+| **Yağmur Güzeler** | Full Stack | FXML UI files (`owner.fxml`, `customer.fxml`, `cart.fxml`, etc.), `styles.css`, UI design and layout; `CouponDAO` (coupon management), `CustomerLoyaltyDAO` (loyalty point tracking) |
 | **Zeynep Duygu Ortancıl** | Full Stack | `CustomerController`, `CartController`, model classes (`Order`, `Product`, `CartItem`), order flow |
 | **Ahmet Furkan Gökbulut** | Full Stack | `MessagesController`, `MyOrdersController`, shipment tracking system, messaging module |
 
