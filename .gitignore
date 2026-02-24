@@ -33,6 +33,8 @@ bin/
 ### Database ###
 greengrocer.db
 Dump20251228.sql
+schema_updates.sql
+db.sql
 
 ### Libraries — JavaFX SDK'yı ayrıca indir ###
 libs/javafx-sdk-23.0.1/

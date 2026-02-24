@@ -194,11 +194,37 @@ CREATE TABLE `OrderStatusHistory` (
 -- ============================================================
 
 -- Default users (passwords are plaintext for demo purposes)
--- owner / owner123, carrier / carr, customer / cust
+-- owner / owner123  |  carrier / carr  |  customers / cust
 INSERT INTO `userinfo` (`username`, `password`, `role`, `address`, `phone`) VALUES
-('owner',  'owner123', 'owner',    'Kadıköy',    '5550000001'),
-('carr',   'carr',     'carrier',  'Beşiktaş',   '5550000002'),
-('cust',   'cust',     'customer', 'Şişli',      '5550000003');
+('owner',          'owner123', 'owner',    'Kadıköy',       '5550000001'),
+('carr',           'carr',     'carrier',  'Beşiktaş',      '5550000002'),
+('cust',           'cust',     'customer', 'Şişli',         '5550000003'),
+-- 25 additional demo customers (password: cust)
+('ahmet.yilmaz',  'cust', 'customer', 'Moda',          '5552000001'),
+('ayse.demir',    'cust', 'customer', 'Beşiktaş',      '5552000002'),
+('mehmet.kaya',   'cust', 'customer', 'Kuzguncuk',     '5552000003'),
+('fatma.celik',   'cust', 'customer', 'Nişantaşı',     '5552000004'),
+('mustafa.sahin', 'cust', 'customer', 'Balat',         '5552000005'),
+('zeynep.yildiz', 'cust', 'customer', 'Emirgan',       '5552000006'),
+('emre.aydin',    'cust', 'customer', 'Caddebostan',   '5552000007'),
+('elif.ozdemir',  'cust', 'customer', 'Florya',        '5552000008'),
+('burak.arslan',  'cust', 'customer', 'Ataşehir',      '5552000009'),
+('seda.polat',    'cust', 'customer', 'Kavacık',       '5552000010'),
+('can.kurt',      'cust', 'customer', 'Çekmeköy',      '5552000011'),
+('gamze.koc',     'cust', 'customer', 'Kartal',        '5552000012'),
+('volkan.tas',    'cust', 'customer', 'Kurtköy',       '5552000013'),
+('ozge.bulut',    'cust', 'customer', 'Cihangir',      '5552000014'),
+('hakan.sen',     'cust', 'customer', 'Etiler',        '5552000015'),
+('pinar.aksoy',   'cust', 'customer', 'Bebek',         '5552000016'),
+('tolga.yavuz',   'cust', 'customer', 'Tarabya',       '5552000017'),
+('merve.gungor',  'cust', 'customer', 'Bakırköy',      '5552000018'),
+('onur.kilic',    'cust', 'customer', 'Bahçelievler',  '5552000019'),
+('esra.dogan',    'cust', 'customer', 'Avcılar',       '5552000020'),
+('serkan.mutlu',  'cust', 'customer', 'Yeşilköy',      '5552000021'),
+('sude.sevim',    'cust', 'customer', 'Beylikdüzü',    '5552000022'),
+('irem.eroglu',   'cust', 'customer', 'Başakşehir',    '5552000023'),
+('selin.tekin',   'cust', 'customer', 'Göktürk',       '5552000024'),
+('baris.uzun',    'cust', 'customer', 'Silivri',       '5552000025');
 
 -- Sample products (no images — load via application)
 INSERT INTO `Product` (`name`, `price`, `stock`, `type`, `threshold`, `discount_percent`) VALUES
