@@ -186,4 +186,105 @@ public class CouponDAO extends AbstractDAO<Coupon> {
 
         return list;
     }
+
+    /**
+     * Assign an existing coupon to a specific user (by user ID).
+     * Only unassigned coupons can be assigned.
+     *
+     * @param code   coupon code
+     * @param userId target user ID from userinfo table
+     * @return true if assignment succeeded
+     */
+    public static boolean assignCouponToUser(String code, int userId) {
+        String sql = """
+                UPDATE Coupon
+                SET assigned_user_id = ?
+                WHERE code = ?
+                  AND assigned_user_id IS NULL
+                """;
+
+        try (Connection con = DBUtil.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setString(2, code.toUpperCase());
+            return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Get all coupons assigned to a specific user.
+     *
+     * @param userId user ID from userinfo table
+     * @return list of coupons assigned to that user
+     */
+    public static List<Coupon> getCouponsByUser(int userId) {
+        List<Coupon> list = new ArrayList<>();
+
+        String sql = """
+                SELECT * FROM Coupon
+                WHERE assigned_user_id = ?
+                ORDER BY created_at DESC
+                """;
+
+        try (Connection con = DBUtil.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(INSTANCE.mapResultSetToEntity(rs));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    /**
+     * Re-activate a previously deactivated coupon.
+     *
+     * @param couponId target coupon ID
+     * @return true if activation succeeded
+     */
+    public static boolean activateCoupon(int couponId) {
+        String sql = "UPDATE Coupon SET is_active = TRUE WHERE coupon_id = ?";
+
+        try (Connection con = DBUtil.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, couponId);
+            return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Permanently delete a coupon.
+     * Should only be used by the owner for cleanup of expired/unused coupons.
+     *
+     * @param couponId target coupon ID
+     * @return true if deletion succeeded
+     */
+    public static boolean deleteCoupon(int couponId) {
+        String sql = "DELETE FROM Coupon WHERE coupon_id = ?";
+
+        try (Connection con = DBUtil.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, couponId);
+            return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

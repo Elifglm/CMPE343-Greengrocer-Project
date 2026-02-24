@@ -151,4 +151,80 @@ public class CustomerLoyaltyDAO extends AbstractDAO<CustomerLoyalty> {
 
         return list;
     }
+
+    /**
+     * Redeem (spend) loyalty points for a customer.
+     * Fails if the customer does not have enough points.
+     *
+     * @param username    customer username
+     * @param pointsToUse number of points to deduct
+     * @return true if redemption succeeded, false if insufficient points
+     */
+    public static boolean redeemPoints(String username, int pointsToUse) {
+        if (pointsToUse <= 0)
+            return false;
+
+        CustomerLoyalty cl = getByUsername(username);
+        if (cl == null || cl.getPoints() < pointsToUse)
+            return false;
+
+        String sql = """
+                UPDATE CustomerLoyalty
+                SET points = points - ?,
+                    tier = CASE
+                        WHEN points - ? >= 2500 THEN 'PLATINUM'
+                        WHEN points - ? >= 1000 THEN 'GOLD'
+                        WHEN points - ? >= 500  THEN 'SILVER'
+                        ELSE 'BRONZE'
+                    END
+                WHERE username = ? AND points >= ?
+                """;
+
+        try (Connection con = DBUtil.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, pointsToUse);
+            ps.setInt(2, pointsToUse);
+            ps.setInt(3, pointsToUse);
+            ps.setInt(4, pointsToUse);
+            ps.setString(5, username);
+            ps.setInt(6, pointsToUse);
+            return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Get top customers ranked by loyalty points (leaderboard).
+     *
+     * @param limit how many customers to return
+     * @return list of CustomerLoyalty records sorted by points descending
+     */
+    public static List<CustomerLoyalty> getTopCustomers(int limit) {
+        List<CustomerLoyalty> list = new ArrayList<>();
+
+        String sql = """
+                SELECT * FROM CustomerLoyalty
+                ORDER BY points DESC
+                LIMIT ?
+                """;
+
+        try (Connection con = DBUtil.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, limit);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(INSTANCE.mapResultSetToEntity(rs));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 }
