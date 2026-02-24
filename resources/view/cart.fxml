@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.CartController"
+            prefWidth="800" prefHeight="500">
+
+    <top>
+        <HBox spacing="10" style="-fx-padding: 10;" alignment="CENTER_LEFT">
+            <Label fx:id="titleLabel" text="Shopping Cart" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Close" onAction="#handleClose"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <TableView fx:id="cartTable" prefHeight="320">
+                <columns>
+                    <TableColumn fx:id="nameCol" text="Product" prefWidth="300"/>
+                    <TableColumn fx:id="kgCol" text="Kg" prefWidth="120"/>
+                    <TableColumn fx:id="unitPriceCol" text="Unit Price" prefWidth="140"/>
+                    <TableColumn fx:id="lineTotalCol" text="Line Total" prefWidth="140"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="Remove Selected" onAction="#handleRemoveSelected"/>
+                <Button text="Clear Cart" onAction="#handleClear"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Subtotal:"/>
+                <Label fx:id="subtotalLabel" text="0.00"/>
+                <Label text="VAT:"/>
+                <Label fx:id="vatLabel" text="0.00"/>
+                <Label text="Total (VAT inc.):" style="-fx-font-weight: bold;"/>
+                <Label fx:id="totalLabel" text="0.00" style="-fx-font-weight: bold;"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Checkout" onAction="#handleCheckout"/>
+                <Label fx:id="infoLabel" text=""/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>
+
+
+

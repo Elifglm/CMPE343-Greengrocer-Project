@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.MyOrdersController"
+            prefWidth="960" prefHeight="540">
+
+    <top>
+        <HBox spacing="10" style="-fx-padding: 10;" alignment="CENTER_LEFT">
+            <Label fx:id="titleLabel" text="My Orders" style="-fx-font-size: 20px;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Refresh" onAction="#handleRefresh"/>
+            <Button text="Close" onAction="#handleClose"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <TableView fx:id="orderTable" prefWidth="920" prefHeight="460">
+                <columns>
+                    <TableColumn fx:id="idCol" text="Order ID" prefWidth="120"/>
+                    <TableColumn fx:id="statusCol" text="Status" prefWidth="200"/>
+                    <TableColumn fx:id="deliveryCol" text="Delivery Time" prefWidth="320"/>
+                    <TableColumn fx:id="totalCol" text="Total (VAT inc.)" prefWidth="240"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>
+
+
+

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.CustomerController"
+            prefWidth="960" prefHeight="540">
+
+    <top>
+        <HBox spacing="10" style="-fx-padding: 10;" alignment="CENTER_LEFT">
+            <Label fx:id="usernameLabel" text="Welcome" />
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="My Orders" onAction="#handleMyOrders"/>
+            <Button text="Open Cart" onAction="#handleOpenCart"/>
+            <Button text="Logout" onAction="#handleLogout"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="12" style="-fx-padding: 10;">
+
+            <!-- LEFT: Search + Table + Add to Cart -->
+            <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS">
+
+                <!-- SEARCH BAR -->
+                <TextField fx:id="searchField"
+                           promptText="Search product..."
+                           maxWidth="300"/>
+
+                <!-- PRODUCT TABLE -->
+                <TableView fx:id="productTable" prefWidth="650" prefHeight="360">
+                    <columns>
+                        <TableColumn fx:id="nameCol" text="Product" prefWidth="330"/>
+                        <TableColumn fx:id="priceCol" text="Price" prefWidth="150"/>
+                        <TableColumn fx:id="stockCol" text="Stock" prefWidth="150"/>
+                    </columns>
+                </TableView>
+
+                <!-- ADD TO CART AREA -->
+                <HBox spacing="10" alignment="CENTER">
+                    <Label text="Kg:"/>
+                    <Spinner fx:id="kgSpinner" prefWidth="140"/>
+                    <Button text="Add to Cart" onAction="#handleAddToCart"/>
+                    <Label fx:id="infoLabel" text=""/>
+                </HBox>
+
+            </VBox>
+
+            <!-- RIGHT: Image Preview -->
+            <VBox spacing="10" prefWidth="260" alignment="TOP_CENTER"
+                  style="-fx-padding: 10; -fx-border-color: #dddddd; -fx-border-radius: 6; -fx-background-radius: 6;">
+                <Label text="Product Image" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+
+                <ImageView fx:id="productImageView"
+                           fitWidth="230"
+                           fitHeight="230"
+                           preserveRatio="true"
+                           smooth="true"/>
+
+                <Label fx:id="imageInfoLabel" text="Select a product to preview image."
+                       wrapText="true" maxWidth="230"/>
+            </VBox>
+
+        </HBox>
+    </center>
+
+</BorderPane>
+
+
+
+
+
+
+

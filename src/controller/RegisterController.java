@@ -1,0 +1,195 @@
+package controller;
+
+import dao.UserDAO;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+/**
+ * Controller for Registration screen.
+ * 
+ * INHERITANCE: Extends BaseController
+ * POLYMORPHISM: Overrides abstract methods from BaseController
+ * ENCAPSULATION: Private fields and validation constants
+ */
+public class RegisterController extends BaseController {
+
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private PasswordField password2Field;
+
+    @FXML
+    private TextField addressField;
+    @FXML
+    private TextField phoneField;
+
+    @FXML
+    private Label infoLabel;
+
+    // ENCAPSULATION: Private validation rules
+    private static final int USER_MIN = 3;
+    private static final int USER_MAX = 20;
+    private static final int PASS_MIN = 6;
+
+    // ========== POLYMORPHISM: Override abstract methods from BaseController
+    // ==========
+
+    @Override
+    public void setUsername(String username) {
+        // Not applicable for registration screen
+        this.currentUsername = username;
+    }
+
+    @Override
+    protected Label getUsernameLabel() {
+        return infoLabel; // Use info label as fallback
+    }
+
+    @Override
+    protected String getScreenTitle() {
+        return "Register - GreenGrocer";
+    }
+
+    @FXML
+    public void initialize() {
+        setError("");
+    }
+
+    @FXML
+    private void handleRegister() {
+        setError("");
+
+        String username = safeTrim(usernameField.getText());
+        String pass1 = safeTrim(passwordField.getText());
+        String pass2 = safeTrim(password2Field.getText());
+
+        String address = safeTrim(addressField.getText());
+        String phone = safeTrim(phoneField.getText());
+
+        // ================= USERNAME VALIDATION =================
+        if (username.isEmpty()) {
+            setError("Username required.");
+            return;
+        }
+        if (username.length() < USER_MIN || username.length() > USER_MAX) {
+            setError("Username must be " + USER_MIN + "-" + USER_MAX + " chars.");
+            return;
+        }
+        // Only letters and underscore allowed (no numbers)
+        if (!util.ValidationUtil.isValidUsername(username)) {
+            setError(
+                    "Username must contain at least one letter. Can include numbers but cannot be just numbers (e.g. 'elif12' OK, '123' NOT OK).");
+            return;
+        }
+
+        // ================= PASSWORD VALIDATION =================
+        if (pass1.isEmpty()) {
+            setError("Password required.");
+            return;
+        }
+
+        // Check all password requirements at once
+        boolean hasMinLength = pass1.length() >= PASS_MIN;
+        boolean hasLetter = pass1.matches(".*[A-Za-z].*");
+        boolean hasDigit = pass1.matches(".*\\d.*");
+        boolean hasSpecial = pass1.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
+
+        if (!hasMinLength || !hasLetter || !hasDigit || !hasSpecial) {
+            setError("Password must be at least " + PASS_MIN
+                    + " chars with 1 letter, 1 digit, and 1 special character (!@#$%^&*)");
+            return;
+        }
+
+        if (!pass1.equals(pass2)) {
+            setError("Passwords do not match.");
+            return;
+        }
+
+        // ================= OPTIONAL FIELDS VALIDATION =================
+        String addressDb = emptyToNull(address);
+        if (addressDb != null && !util.ValidationUtil.isValidAddress(addressDb)) {
+            setError("Address must contain letters, not just numbers (e.g. 'Maltepe 111' OK, '111' NOT OK).");
+            return;
+        }
+
+        String phoneDb = emptyToNull(phone);
+        if (phoneDb != null) {
+            // Validate Turkish phone format
+            if (!util.ValidationUtil.isValidPhoneNumber(phoneDb)) {
+                setError("Invalid phone number! Use format: 0555 555 5555 or 05555555555");
+                return;
+            }
+        }
+
+        // ================= DB =================
+        try {
+            if (UserDAO.usernameExists(username)) {
+                setError("Username already taken.");
+                return;
+            }
+
+            // Check for duplicate phone number
+            if (phoneDb != null && UserDAO.phoneExists(phoneDb)) {
+                setError("This phone number is already registered.");
+                return;
+            }
+
+            boolean ok = UserDAO.registerCustomer(username, pass1, addressDb, phoneDb);
+            if (!ok) {
+                setError("Registration failed (DB).");
+                return;
+            }
+
+            // success
+            infoLabel.setStyle("-fx-text-fill: green;");
+            infoLabel.setText("Account created ✅");
+
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setTitle("Registration");
+            a.setHeaderText("Success");
+            a.setContentText("Account created. You can login now.");
+            a.showAndWait();
+
+            goLogin();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            setError("Unexpected error occurred.");
+        }
+    }
+
+    @FXML
+    private void handleBack() {
+        goLogin();
+    }
+
+    // ================= helpers =================
+
+    private void goLogin() {
+        try {
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            boolean wasMaximized = stage.isMaximized();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
+            Scene scene = new Scene(loader.load(), 960, 540);
+            applyStylesheet(scene);
+
+            stage.setTitle("GreenGrocer Login");
+            stage.setScene(scene);
+            stage.setMaximized(wasMaximized);
+        } catch (Exception e) {
+            e.printStackTrace();
+            setError("Cannot open login!");
+        }
+    }
+
+    private void setError(String msg) {
+        infoLabel.setStyle("-fx-text-fill: red;");
+        infoLabel.setText(msg == null ? "" : msg);
+    }
+}
