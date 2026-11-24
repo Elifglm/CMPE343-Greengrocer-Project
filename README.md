@@ -1,6 +1,6 @@
 # 🥦 GreenGrocer — Online Market Application
 
-> **CMPE343 – Software Engineering** | Bahçeşehir University
+> **CMPE343 – Software Engineering** | Kadir Has University
 
 GreenGrocer is a JavaFX desktop application that supports three user roles: Customer, Carrier, and Store Owner. Users can browse products, manage their cart, place orders, generate PDF invoices, and earn loyalty rewards through a coupon system.
 
