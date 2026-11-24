@@ -83,7 +83,12 @@ CMPE343_GreenGrocer/
      ```
 
 3. **Configure the database connection:**
-   - Open `src/util/DBUtil.java` and update `URL`, `USER`, and `PASSWORD` with your MySQL credentials.
+   - Set your MySQL credentials as environment variables (in your shell or the IDE run configuration):
+     ```bash
+     export DB_PASSWORD=your_mysql_password
+     export DB_USER=root                                   # optional, defaults to root
+     export DB_URL=jdbc:mysql://localhost:3306/greengrocer # optional, defaults to local greengrocer DB
+     ```
 
 4. **Open the project in your IDE:**
    - Add the `libs/` folder to the project libraries (JavaFX SDK, iText JAR, MySQL Connector JAR).
